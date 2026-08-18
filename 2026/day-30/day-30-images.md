@@ -508,4 +508,202 @@
     []
     PS C:\Users\mukul> 
     ```
+---
+
+### Task 5: Cleanup
+- Stop all running containers in one command
+  - docker stop $(docker ps -q)
+    <br>(docker ps will show all containers)
+    <br>(`-q` will be used to get containers ids)
+     ```text
+     PS C:\Users\mukul> docker stop $(docker ps -q)
+     0e140795cb4d
+     PS C:\Users\mukul> docker ps
+     CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+     ``` 
+- Remove all stopped containers in one command
+  - docker rm $(docker ps -aq)
+    <br>(docker ps -a will show all containers)
+    <br>(`-q` will be used to get containers ids)
+     ```text
+     PS C:\Users\mukul> docker ps -a
+     CONTAINER ID   IMAGE         COMMAND                  CREATED        STATUS                          PORTS     NAMES
+     0e140795cb4d   nginx         "/docker-entrypoint.…"   3 hours ago    Exited (0) About a minute ago             my-nginx
+     c26e6fe71e22   ubuntu        "bash"                   19 hours ago   Exited (0) 19 hours ago                   zen_cray
+     6a0efd4e527d   ubuntu        "/bin/bash"              19 hours ago   Exited (0) 19 hours ago                   funny_torvalds
+     2976f7bd2a54   hello-world   "/hello"                 19 hours ago   Exited (0) 19 hours ago                   strange_dijkstra
+     8e1c1f11a1a0   hello-world   "/hello"                 28 hours ago   Exited (0) 28 hours ago                   adoring_panini
+     PS C:\Users\mukul> docker rm $(docker ps -aq)
+     0e140795cb4d
+     c26e6fe71e22
+     6a0efd4e527d
+     2976f7bd2a54
+     8e1c1f11a1a0
+     PS C:\Users\mukul> docker ps -a
+     CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+     PS C:\Users\mukul> 
+     ```
+
+- Remove unused images
+  - docker image prune (Removes all dangling images)
+  - docker image prune -a (Removes all images including)
+  - docker image prune -af (Won't ask for confirmation)
+    ```text
+    PS C:\Users\mukul> docker images
+    IMAGE                 ID             DISK USAGE   CONTENT SIZE   EXTRA
+    alpine/mysql:latest   0799620753ba       70.6MB         15.4MB
+    hello-world:latest    5dd0d3e6e255       25.9kB         9.49kB
+    nginx:latest          8541484afbc9        241MB           66MB
+    ubuntu:latest         678c6550cc43        160MB         45.3MB
+    PS C:\Users\mukul> docker image prune
+    WARNING! This will remove all dangling images.
+    Are you sure you want to continue? [y/N] y
+    Total reclaimed space: 0B
+    PS C:\Users\mukul> docker image prune -a
+    WARNING! This will remove all images without at least one container associated to them.
+    Are you sure you want to continue? [y/N] y
+    Deleted Images:
+    untagged: nginx:latest
+    deleted: sha256:8541484afbc9c8a5a8a99b379568ebbc957f658583ec9448fc43104229c03cf8
+    deleted: sha256:963cfe6e75d1c292f66589d7e190b137cf89310414c0c1c5b476dfc61a4fcd0d
+    deleted: sha256:a2a034340090fa5be6987a96c1c1e9cd5be56157bea6d918acf9c1bbd28073c8
+    untagged: ubuntu:latest
+    deleted: sha256:678c6550cc43645e08669028bc177f50be4e7c5b8cca677067b1914d4afc7a03
+    deleted: sha256:7b202b0e2e0028c6250f5fcf41d04df492d145a1654c6995a6553f0c1f6f1960
+    deleted: sha256:522d96ea380735b5cf03988f84c2ac91c28d72f628c905881e78f7e9d67079ad
+    untagged: alpine/mysql:latest
+    deleted: sha256:0799620753bad5d7e4c2e4740b9e31d811e2983392a0b1a433e4a7326353c2a0
+    deleted: sha256:fd2b379656fe4729a240b857dac0dcbb032c57231fa35952ca24815894211779
+    untagged: hello-world:latest
+    deleted: sha256:5dd0d3e6e255913fc30f90b9f2b1d359cc2cbdb48090cc4b65f1676e203243cc
+    deleted: sha256:d1a8d0a4eeb63aff09f5f34d4d80505e0ba81905f36158cc3970d8e07179e59e
+    deleted: sha256:8e752a1cddeafc02597e756f4a0ec96e29f63ac4bc4af87682daf3f1de843bb7
+
+    Total reclaimed space: 471.7MB
+    PS C:\Users\mukul> 
+    ```
+
+- Check how much disk space Docker is using
+  - docker system df (To check disk space)
+    ```text
+    PS C:\Users\mukul> docker system df
+    TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+    Images          1         1         240.6MB   0B (0%)
+    Containers      1         1         81.92kB   0B (0%)
+    Local Volumes   0         0         0B        0B
+    Build Cache     0         0         0B        0B
+    ```
+  - docker system info (To check docker system info)
+    ```text 
+    
+    PS C:\Users\mukul> docker system info
+    Client:
+    Version:    29.7.2
+    Context:    desktop-linux
+    Debug Mode: false
+    Plugins:
+    agent: Docker AI Agent Runner (Docker Inc.)
+        Version:  v1.119.0
+        Path:     C:\Program Files\Docker\cli-plugins\docker-agent.exe
+    ai: Docker AI Agent - Ask Gordon (Docker Inc.)
+        Version:  v1.30.0
+        Path:     C:\Program Files\Docker\cli-plugins\docker-ai.exe
+    buildx: Docker Buildx (Docker Inc.)
+        Version:  v0.36.0-desktop.1
+        Path:     C:\Program Files\Docker\cli-plugins\docker-buildx.exe
+    compose: Docker Compose (Docker Inc.)
+        Version:  v5.3.1
+        Path:     C:\Program Files\Docker\cli-plugins\docker-compose.exe
+    debug: Get a shell into any image or container (Docker Inc.)
+        Version:  0.0.47
+        Path:     C:\Program Files\Docker\cli-plugins\docker-debug.exe
+    desktop: Docker Desktop commands (Docker Inc.)
+        Version:  v0.4.3
+        Path:     C:\Program Files\Docker\cli-plugins\docker-desktop.exe
+    dhi: CLI for managing Docker Hardened Images (Docker Inc.)
+        Version:  v0.0.7
+        Path:     C:\Program Files\Docker\cli-plugins\docker-dhi.exe
+    extension: Manages Docker extensions (Docker Inc.)
+        Version:  v0.2.31
+        Path:     C:\Program Files\Docker\cli-plugins\docker-extension.exe
+    init: Creates Docker-related starter files for your project (Docker Inc.)
+        Version:  v1.4.0
+        Path:     C:\Program Files\Docker\cli-plugins\docker-init.exe
+    mcp: Docker MCP Plugin (Docker Inc.)
+        Version:  v0.43.3
+        Path:     C:\Program Files\Docker\cli-plugins\docker-mcp.exe
+    model: Docker Model Runner (Docker Inc.)
+        Version:  v1.2.6
+        Path:     C:\Program Files\Docker\cli-plugins\docker-model.exe
+    offload: Docker Offload (Docker Inc.)
+        Version:  v0.6.9
+        Path:     C:\Program Files\Docker\cli-plugins\docker-offload.exe
+    pass: Docker Pass Secrets Manager Plugin (beta) (Docker Inc.)
+        Version:  v0.2.0
+        Path:     C:\Program Files\Docker\cli-plugins\docker-pass.exe
+    sandbox: "docker sandbox" is deprecated, use Docker Sandboxes instead (Docker Inc.)
+        Version:  v0.13.0
+        Path:     C:\Program Files\Docker\cli-plugins\docker-sandbox.exe
+    scout: Docker Scout (Docker Inc.)
+        Version:  v1.24.0
+        Path:     C:\Program Files\Docker\cli-plugins\docker-scout.exe
+
+    Server:
+    Containers: 1
+    Running: 1
+    Paused: 0
+    Stopped: 0
+    Images: 2
+    Server Version: 29.7.2
+    Storage Driver: overlayfs
+    driver-type: io.containerd.snapshotter.v1
+    Logging Driver: json-file
+    Cgroup Driver: cgroupfs
+    Cgroup Version: 2
+    Plugins:
+    Volume: local
+    Network: bridge host ipvlan macvlan null overlay
+    Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+    CDI spec directories:
+    /etc/cdi
+    /var/run/cdi
+    Discovered Devices:
+    cdi: docker.com/gpu=webgpu
+    Swarm: inactive
+    Runtimes: io.containerd.runc.v2 nvidia runc
+    Default Runtime: runc
+    Init Binary: docker-init
+    containerd version: e53c7c1516c3b2bff98eb76f1f4117477e6f4e66
+    runc version: v1.3.6-0-g491b69ba
+    init version: de40ad0
+    Security Options:
+    seccomp
+    Profile: builtin
+    cgroupns
+    Kernel Version: 6.18.33.2-microsoft-standard-WSL2
+    Operating System: Docker Desktop
+    OSType: linux
+    Architecture: x86_64
+    CPUs: 4
+    Total Memory: 3.79GiB
+    Name: docker-desktop
+    ID: 25b78d7d-9e2a-42d9-85de-3691d70e7a63
+    Docker Root Dir: /var/lib/docker
+    Debug Mode: false
+    HTTP Proxy: http.docker.internal:3128
+    HTTPS Proxy: http.docker.internal:3128
+    No Proxy: hubproxy.docker.internal
+    Labels:
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli
+    Experimental: false
+    Insecure Registries:
+    hubproxy.docker.internal:5555
+    127.0.0.0/8
+    ::1/128
+    Live Restore Enabled: false
+    Firewall Backend: iptables
+    ```
+  - docker system events (Shows real-time Docker events.)
+  - docker system prune -a (To remove all stopped containers, unused networks, dangling build cache, and unused images.)
+
     
